@@ -1,41 +1,39 @@
 import { ID } from "react-native-appwrite";
 import { createContext, useContext, useEffect, useState } from "react";
-import { account } from "../lib/appwrite";
-// import { toast } from "../lib/toast";
+import { account } from "@/lib/appwrite";
 
 
-const UserContext = createContext<any>(null);
+
+const UserContext = createContext( null )
 
 export function useUser() {
   return useContext(UserContext);
 }
 
-export function UserProvider(props:any) {
-  const [user, setUser] = useState<null | any>(null);
+export function UserProvider(props) {
+  const [user, setUser] = useState(null);
 
-  async function login(email:string, password:string) {
+  async function login(email, password) {
     const loggedIn = await account.createEmailPasswordSession(email, password);
     setUser(loggedIn);
-    // toast('Welcome back. You are logged in');
   }
 
   async function logout() {
     await account.deleteSession("current");
     setUser(null);
-    // toast('Logged out');
+    
   }
 
-  async function register(email:string, password:string) {
+  async function register(email, password) {
     await account.create(ID.unique(), email, password);
     await login(email, password);
-    // toast('Account created');
+    
   }
 
   async function init() {
     try {
       const loggedIn = await account.get();
       setUser(loggedIn);
-      // toast('Welcome back. You are logged in');
     } catch (err) {
       setUser(null);
     }
@@ -46,7 +44,7 @@ export function UserProvider(props:any) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ current: user, login, logout, register, toast }}>
+    <UserContext.Provider value={{ current: user, login, logout, register}}>
       {props.children}
     </UserContext.Provider>
   );
