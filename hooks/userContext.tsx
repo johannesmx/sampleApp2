@@ -4,16 +4,27 @@ import { account } from "@/lib/appwrite";
 
 
 
-const UserContext = createContext( null )
+const UserContext = createContext<null|any>(null)
 
 export function useUser() {
   return useContext(UserContext);
 }
 
-export function UserProvider(props) {
-  const [user, setUser] = useState(null);
+interface uProvider {
+  value: {
+    current: {
+      user: any
+      register: any
+      logout: any
+      login: any
+    }
+  }
+}
 
-  async function login(email, password) {
+export function UserProvider(props:any) {
+  const [user, setUser] = useState< null|any>(null);
+
+  async function login(email:string, password:string) {
     const loggedIn = await account.createEmailPasswordSession(email, password);
     setUser(loggedIn);
   }
@@ -24,7 +35,7 @@ export function UserProvider(props) {
     
   }
 
-  async function register(email, password) {
+  async function register(email:string, password:string) {
     await account.create(ID.unique(), email, password);
     await login(email, password);
     
@@ -44,8 +55,8 @@ export function UserProvider(props) {
   }, []);
 
   return (
-    <UserContext.Provider value={{ current: user, login, logout, register}}>
+    <UserContext.Provider value={{current: user, login, logout, register }}>
       {props.children}
     </UserContext.Provider>
-  );
+  )
 }

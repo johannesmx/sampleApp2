@@ -3,6 +3,7 @@ import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
 import { useState, useEffect } from 'react'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
+import { useUser } from '@/hooks/userContext'
 import { Link } from 'expo-router'
 
 export default function SignUp(props: any) {
@@ -12,6 +13,8 @@ export default function SignUp(props: any) {
     const [validEmail, setValidEmail] = useState<boolean>(false)
     const [validPassword, setValidPassword] = useState<boolean>(false)
 
+    const user = useUser()
+    console.log(user)
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             // console.log('valid email')
@@ -65,6 +68,9 @@ export default function SignUp(props: any) {
                 <Pressable
                     style={(validEmail && validPassword) ? styles.button : styles.buttondisabled}
                     disabled={(validEmail && validPassword) ? false : true}
+                    onPress={ () => { 
+                        user.register( email, password )
+                        }}
                 >
                     <ThemedText
                         style={(validEmail && validPassword) ? styles.buttonText : styles.buttonTextDisabled}
