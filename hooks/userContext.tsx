@@ -1,27 +1,25 @@
 import { ID } from "react-native-appwrite";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 import { account } from "@/lib/appwrite";
 
-
-
-const UserContext = createContext<null|any>(null)
+const UserContext = createContext<null | any>(null)
 
 export function useUser() {
   return useContext(UserContext);
 }
 
-interface uProvider {
-  value: {
+interface uProvider extends React.PropsWithChildren{
+  
     current: {
       user: any
-      register: any
-      logout: any
-      login: any
+      register: Promise<void>
+      logout: Promise<void>
+      login: Promise<void>
     }
-  }
+    
 }
 
-export function UserProvider(props:any) {
+export function UserProvider(props:uProvider) {
   const [user, setUser] = useState< null|any>(null);
 
   async function login(email:string, password:string) {
@@ -38,7 +36,6 @@ export function UserProvider(props:any) {
   async function register(email:string, password:string) {
     await account.create(ID.unique(), email, password);
     await login(email, password);
-    
   }
 
   async function init() {

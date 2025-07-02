@@ -14,7 +14,7 @@ export default function SignUp(props: any) {
     const [validPassword, setValidPassword] = useState<boolean>(false)
 
     const user = useUser()
-    console.log(user)
+    
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             // console.log('valid email')
@@ -36,6 +36,10 @@ export default function SignUp(props: any) {
             setValidPassword(false)
         }
     }, [password])
+
+    useEffect(()=> {
+        console.log(user)
+    },[user])
 
     return (
         <ThemedView style={styles.container}>
