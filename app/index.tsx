@@ -1,10 +1,11 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native'
-import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
-import { useState, useEffect } from 'react'
+import { ThemedView } from '@/components/ThemedView'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
-import { useUser } from '@/hooks/userContext'
-import { Link } from 'expo-router'
+import { useEffect, useState, useContext } from 'react'
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { AuthContext } from '@/contexts/AuthContext'
+import { ID } from 'react-native-appwrite'
+import { router } from 'expo-router'
 
 export default function SignUp(props: any) {
     const [email, setEmail] = useState<string>('')
@@ -12,8 +13,9 @@ export default function SignUp(props: any) {
     // email and password validity
     const [validEmail, setValidEmail] = useState<boolean>(false)
     const [validPassword, setValidPassword] = useState<boolean>(false)
+    const [auth,setAuth] = useState<null | any>(null)
 
-    const user = useUser()
+    const user = useContext(AuthContext)
     
     useEffect(() => {
         if (email.indexOf('@') > 0) {
@@ -37,9 +39,28 @@ export default function SignUp(props: any) {
         }
     }, [password])
 
-    useEffect(()=> {
-        console.log(user)
-    },[user])
+    const signUp = async () => {
+        await user.create( ID.unique(), email, password )
+        // create session
+        const session = await user.createEmailPasswordSession(email,password)
+        setAuth(session)
+    }
+
+    const checkAuth = async () => {
+        const session = await user.get()
+        if( session ) {
+            console.log(session)
+        }
+    }
+
+    useEffect( () => {
+        if( auth ) {
+            router.replace("/(tabs)")
+        }
+    },[auth])
+
+    
+    
 
     return (
         <ThemedView style={styles.container}>
@@ -73,7 +94,7 @@ export default function SignUp(props: any) {
                     style={(validEmail && validPassword) ? styles.button : styles.buttondisabled}
                     disabled={(validEmail && validPassword) ? false : true}
                     onPress={ () => { 
-                        user.register( email, password )
+                        signUp()
                         }}
                 >
                     <ThemedText

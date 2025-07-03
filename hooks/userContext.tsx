@@ -1,6 +1,7 @@
 import { ID } from "react-native-appwrite";
 import { createContext, PropsWithChildren, useContext, useEffect, useState } from "react";
 import { account } from "@/lib/appwrite";
+import { type Models } from "react-native-appwrite";
 
 const UserContext = createContext<null | any>(null)
 
@@ -9,17 +10,15 @@ export function useUser() {
 }
 
 interface uProvider extends React.PropsWithChildren{
-  
     current: {
       user: any
-      register: Promise<void>
-      logout: Promise<void>
-      login: Promise<void>
+      register: (email:string, password:string) => Promise<void>
+      logout: () => Promise<void>
+      login: (email: string, password:string) => Promise<void>
     }
-    
 }
 
-export function UserProvider(props:uProvider) {
+export function UserProvider(props:any) {
   const [user, setUser] = useState< null|any>(null);
 
   async function login(email:string, password:string) {
