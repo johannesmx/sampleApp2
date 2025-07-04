@@ -1,10 +1,12 @@
 import { View, Text, StyleSheet, TextInput, Pressable } from 'react-native'
 import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
-import { useUser } from '@/hooks/userContext'
-import { Link } from 'expo-router'
+//import { useUser } from '@/hooks/userContext'
+import { router } from 'expo-router'
+import { AuthContext } from '@/contexts/AuthContext'
+import { ID } from 'react-native-appwrite'
 
 export default function SignUp(props: any) {
     const [email, setEmail] = useState<string>('')
@@ -12,9 +14,26 @@ export default function SignUp(props: any) {
     // email and password validity
     const [validEmail, setValidEmail] = useState<boolean>(false)
     const [validPassword, setValidPassword] = useState<boolean>(false)
+    const [auth,setAuth] = useState<null|any>(null)
 
-    const user = useUser()
-    console.log(user)
+    const user = useContext(AuthContext)
+
+    const register = async () => {
+        // sign up with unique id, email and password
+        await user.create( ID.unique(), email, password )
+        // create a session
+        const session = await user.createEmailPasswordSession(email,password)
+        setAuth(session)
+    }
+
+    useEffect(() => {
+        if( auth ) {
+            router.navigate("/(tabs)")
+        }
+    }, [auth])
+
+    //const user = useUser()
+    //console.log(user)
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             // console.log('valid email')
@@ -69,7 +88,7 @@ export default function SignUp(props: any) {
                     style={(validEmail && validPassword) ? styles.button : styles.buttondisabled}
                     disabled={(validEmail && validPassword) ? false : true}
                     onPress={ () => { 
-                        user.register( email, password )
+                        register()
                         }}
                 >
                     <ThemedText

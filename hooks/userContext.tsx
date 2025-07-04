@@ -10,16 +10,16 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-interface uProvider {
-  value: {
-    current: {
-      user: any
-      register: any
-      logout: any
-      login: any
-    }
-  }
-}
+// interface uProvider {
+//   value: {
+//     current: {
+//       user: any
+//       register: any
+//       logout: any
+//       login: any
+//     }
+//   }
+// }
 
 export function UserProvider(props:any) {
   const [user, setUser] = useState< null|any>(null);
