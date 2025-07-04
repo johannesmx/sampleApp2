@@ -56,6 +56,10 @@ export default function SignUp(props: any) {
         }
     }, [password])
 
+    useEffect(()=> {
+        console.log(user)
+    },[user])
+
     return (
         <ThemedView style={styles.container}>
             <View style={styles.form}>
