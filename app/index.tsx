@@ -28,7 +28,7 @@ export default function SignUp(props: any) {
 
     useEffect(() => {
         if( auth ) {
-            router.navigate("/(tabs)")
+            router.navigate("/login")
         }
     }, [auth])
 
