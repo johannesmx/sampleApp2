@@ -8,7 +8,7 @@ import { router, Link } from 'expo-router'
 import { AuthContext } from '@/contexts/AuthContext'
 import { ID } from 'react-native-appwrite'
 
-export default function SignUp(props: any) {
+export default function Login(props: any) {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     // email and password validity
@@ -18,12 +18,14 @@ export default function SignUp(props: any) {
 
     const user = useContext(AuthContext)
 
-    const register = async () => {
-        // sign up with unique id, email and password
-        await user.create( ID.unique(), email, password )
-        // create a session
-        const session = await user.createEmailPasswordSession(email,password)
-        setAuth(session)
+    const login = async () => {
+        try {
+            const session = await user.get()
+            setAuth(session)
+        }
+        catch( error:any ) {
+            console.log( error )
+        }
     }
 
     useEffect(() => {
@@ -56,14 +58,10 @@ export default function SignUp(props: any) {
         }
     }, [password])
 
-    useEffect(()=> {
-        console.log(user)
-    },[user])
-
     return (
         <ThemedView style={styles.container}>
             <View style={styles.form}>
-                <ThemedText style={styles.title}>Sign up</ThemedText>
+                <ThemedText style={styles.title}>Sign in</ThemedText>
                 <View style={ styles.label }>
                     <ThemedText>Email</ThemedText>
                     <ValidIndicator valid={validEmail} />
@@ -92,17 +90,17 @@ export default function SignUp(props: any) {
                     style={(validEmail && validPassword) ? styles.button : styles.buttondisabled}
                     disabled={(validEmail && validPassword) ? false : true}
                     onPress={ () => { 
-                        register()
+                        login()
                         }}
                 >
                     <ThemedText
                         style={(validEmail && validPassword) ? styles.buttonText : styles.buttonTextDisabled}
                     >
-                        Sign up
+                        Sign In
                     </ThemedText>
                 </Pressable>
                 <ThemedText style={ styles.altscreen }>
-                    <Link href="/login">Already have an account? Go to Login</Link>
+                    <Link href="/">Don't have an account? Go to Sign up</Link>
                 </ThemedText>
             </View>
         </ThemedView>
@@ -154,7 +152,7 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between"
     },
-    altscreen: {
+     altscreen: {
         marginTop: 20,
         textAlign: "center",
     },
