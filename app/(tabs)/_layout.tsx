@@ -9,14 +9,18 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+import { DBContext } from '@/contexts/DBContext';
+import { databases } from '@/lib/appwrite';
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <DBContext.Provider value={databases}>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
+        headerShown: true,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
         tabBarStyle: Platform.select({
@@ -31,7 +35,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          tabBarIcon: ({ color }) => <Ionicons size={28} name="list-outline" color={color} />,
         }}
       />
       <Tabs.Screen
@@ -44,9 +48,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          title: "Profile",
           tabBarIcon: ({ color }) => <Ionicons size={28} name="person-circle" color={color}/>
         }}
       />
     </Tabs>
+    </DBContext.Provider>
   );
 }
