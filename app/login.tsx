@@ -20,7 +20,8 @@ export default function Login(props: any) {
 
     const login = async () => {
         try {
-            const session = await user.get()
+            const session = await user.createEmailPasswordSession(email,password)
+            console.log(session)
             setAuth(session)
         }
         catch( error:any ) {
