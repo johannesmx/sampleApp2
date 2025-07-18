@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet, View } from 'react-native';
+import { Platform, StyleSheet, View, FlatList } from 'react-native';
 import { useContext, useEffect, useState } from 'react';
 
 import { HelloWave } from '@/components/HelloWave';
@@ -11,41 +11,44 @@ import { AuthContext } from '@/contexts/AuthContext';
 import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
 import { ID, Permission, Role, Query } from "react-native-appwrite"
 
-export default function HomeScreen() {
+export default function ListScreen() {
+  const[uid,setUid] = useState<string>('')
+  const[items,setItems] = useState<any[]>([])
+
   const user = useContext( AuthContext )
   const db = useContext( DBContext )
 
-  interface Document {
-    label:string,
-    description: string,
-    status: boolean,
-    created: number,
-    userId: string
-  }
-
-  useEffect( () => {
+  useEffect( ()=>{
     if( user ) {
-      user.get().then( (res:any) => console.log(res) )
+      user.get().then(
+        (res:any) => setUid( res.$id )
+      )
     }
-  }, [user])
+  },[user])
 
-  const addData = async ( doc:Document ) => {
-    const result = await db.createDocument(
+  const listData = async () => {
+    const response = await db.listDocuments(
       DATABASE_ID,
       COLLECTION_ID,
-      ID.unique(),
-      doc,
-      [ 
-        Permission.write( Role.user(doc.userId) ),
-        Permission.read( Role.user(doc.userId) )
-      ]
+      [Query.equal("userId", [uid]),Query.orderDesc("created") ]
     )
+    setItems( response )
+    console.log(items, response )
   }
+
+  useEffect(()=>{
+    listData()
+  },[])
 
   return (
     <View>
       <ThemedView>
-        <ThemedText>Home</ThemedText>
+        <ThemedText>List View</ThemedText>
+        <FlatList 
+          data={ items }
+          renderItem={ ({item}) => <ThemedText>{ item.label }</ThemedText>}
+          keyExtractor={ item => item.$id }
+        />
       </ThemedView>
     </View>
   );
