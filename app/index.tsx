@@ -28,12 +28,12 @@ export default function SignUp(props: any) {
 
     useEffect(() => {
         if( auth ) {
+            console.log( auth )
             router.navigate("/(tabs)")
         }
     }, [auth])
 
-    //const user = useUser()
-    //console.log(user)
+    
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             // console.log('valid email')
@@ -57,7 +57,12 @@ export default function SignUp(props: any) {
     }, [password])
 
     useEffect(()=> {
-        console.log(user)
+        if( user ) {
+            user.get()
+            .then(( res:any ) => {
+                router.navigate("/(tabs)")
+            })
+        }
     },[user])
 
     return (
@@ -101,9 +106,11 @@ export default function SignUp(props: any) {
                         Sign up
                     </ThemedText>
                 </Pressable>
-                <ThemedText style={ styles.altscreen }>
-                    <Link href="/login">Already have an account? Go to Login</Link>
-                </ThemedText>
+                <ThemedView>
+                    <ThemedText style={ styles.altscreen }>
+                        <Link href="/login">Already have an account? Go to Login</Link>
+                    </ThemedText>
+                </ThemedView>
             </View>
         </ThemedView>
     )
