@@ -6,7 +6,7 @@ import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { DBContext } from '@/contexts/DBContext';
+
 import { AuthContext } from '@/contexts/AuthContext';
 // import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
 // import { ID, Permission, Role, Query } from "react-native-appwrite"
@@ -18,8 +18,7 @@ export default function ListScreen() {
 
   const user = useContext( AuthContext )
   const data = useData()
-  const db = useContext( DBContext )
-
+ 
   useEffect( ()=>{
     if( user ) {
       user.get().then(
@@ -28,6 +27,10 @@ export default function ListScreen() {
       .catch((error:string) => console.log(error))
     }
   },[user])
+
+  useEffect(() => {
+    setItems( data.current )
+  },[data.current])
 
   
   return (
