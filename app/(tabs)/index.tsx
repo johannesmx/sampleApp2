@@ -25,23 +25,11 @@ export default function ListScreen() {
       user.get().then(
         (res:any) => setUid( res.$id )
       )
+      .catch((error:string) => console.log(error))
     }
   },[user])
 
-  // const listData = async () => {
-  //   const response = await db.listDocuments(
-  //     DATABASE_ID,
-  //     COLLECTION_ID,
-  //     [Query.orderDesc("created") ]
-  //   )
-  //   setItems( response )
-  //   console.log(items, response )
-  // }
-
-  // useEffect(()=>{
-  //   listData()
-  // },[])
-
+  
   return (
     <View>
       <ThemedView>
