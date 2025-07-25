@@ -8,14 +8,16 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { DBContext } from '@/contexts/DBContext';
 import { AuthContext } from '@/contexts/AuthContext';
-import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
-import { ID, Permission, Role, Query } from "react-native-appwrite"
+// import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
+// import { ID, Permission, Role, Query } from "react-native-appwrite"
+import { useData } from '@/hooks/useData';
 
 export default function ListScreen() {
   const[uid,setUid] = useState<string>('')
   const[items,setItems] = useState<any[]>([])
 
   const user = useContext( AuthContext )
+  const data = useData()
   const db = useContext( DBContext )
 
   useEffect( ()=>{
@@ -26,19 +28,19 @@ export default function ListScreen() {
     }
   },[user])
 
-  const listData = async () => {
-    const response = await db.listDocuments(
-      DATABASE_ID,
-      COLLECTION_ID,
-      [Query.equal("userId", [uid]),Query.orderDesc("created") ]
-    )
-    setItems( response )
-    console.log(items, response )
-  }
+  // const listData = async () => {
+  //   const response = await db.listDocuments(
+  //     DATABASE_ID,
+  //     COLLECTION_ID,
+  //     [Query.orderDesc("created") ]
+  //   )
+  //   setItems( response )
+  //   console.log(items, response )
+  // }
 
-  useEffect(()=>{
-    listData()
-  },[])
+  // useEffect(()=>{
+  //   listData()
+  // },[])
 
   return (
     <View>
