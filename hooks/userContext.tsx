@@ -8,19 +8,9 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-// interface uProvider {
-//   value: {
-//     current: {
-//       user: any
-//       register: any
-//       logout: any
-//       login: any
-//     }
-//   }
-// }
 
-export function UserProvider(props:uProvider) {
-  const [user, setUser] = useState< null|any>(null);
+export function UserProvider(props:any) {
+  const [user, setUser] = useState< any>();
 
   async function login(email:string, password:string) {
     const loggedIn = await account.createEmailPasswordSession(email, password);
@@ -30,7 +20,6 @@ export function UserProvider(props:uProvider) {
   async function logout() {
     await account.deleteSession("current");
     setUser(null);
-    
   }
 
   async function register(email:string, password:string) {

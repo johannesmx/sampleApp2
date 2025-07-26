@@ -26,7 +26,9 @@ export default function AddScreen() {
   useEffect( () => {
     if( user ) {  
       user.get()
-      .then((res:any) => setUid(res.$id) ) }
+      .then((res:any) => setUid(res.$id) ) 
+      .catch((error:string) => console.log(error))
+    }
   },[user])
 
   useEffect(() => {
@@ -66,6 +68,7 @@ export default function AddScreen() {
       created: ts,
       userId: uid
     }
+    console.log( item )
     // write the document to the database
     const result = await db.createDocument(
       DATABASE_ID,

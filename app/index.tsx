@@ -3,7 +3,7 @@ import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
 import { useState, useEffect, useContext } from 'react'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
-//import { useUser } from '@/hooks/userContext'
+import { useUser } from '@/hooks/userContext'
 import { router, Link } from 'expo-router'
 import { AuthContext } from '@/contexts/AuthContext'
 import { ID } from 'react-native-appwrite'
@@ -28,10 +28,26 @@ export default function SignUp(props: any) {
 
     useEffect(() => {
         if( auth ) {
-            console.log( auth )
+            //console.log( auth )
             router.navigate("/(tabs)")
         }
     }, [auth])
+
+    useEffect( () => {
+        try {
+            if( user ) {
+                console.log( user )
+                user.get()
+                .then((res:any) => console.log(res))
+                .catch((error:any) => {
+                    console.log(error.AppwriteException )
+                })
+            }
+        }
+        catch( error:any ) {
+            console.log( error )
+        }
+    },[user])
 
     
     useEffect(() => {
@@ -56,14 +72,7 @@ export default function SignUp(props: any) {
         }
     }, [password])
 
-    useEffect(()=> {
-        if( user ) {
-            user.get()
-            .then(( res:any ) => {
-                router.navigate("/(tabs)")
-            })
-        }
-    },[user])
+    
 
     return (
         <ThemedView style={styles.container}>
