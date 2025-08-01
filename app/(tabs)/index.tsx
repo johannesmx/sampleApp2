@@ -2,35 +2,31 @@ import { Image } from 'expo-image';
 import { Platform, StyleSheet, View, FlatList } from 'react-native';
 import { useContext, useEffect, useState } from 'react';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 
-import { AuthContext } from '@/contexts/AuthContext';
-// import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
-// import { ID, Permission, Role, Query } from "react-native-appwrite"
 import { useData } from '@/hooks/useData';
+import { useUser } from '@/hooks/userContext'
 
 export default function ListScreen() {
   const[uid,setUid] = useState<string>('')
   const[items,setItems] = useState<any[]>([])
 
-  const user = useContext( AuthContext )
   const data = useData()
+  const user = useUser()
  
   useEffect( ()=>{
-    if( user ) {
-      user.get().then(
-        (res:any) => setUid( res.$id )
-      )
-      .catch((error:string) => console.log(error))
+    if( user.current ) {
+      setUid( user.current.$id )
     }
   },[user])
 
   useEffect(() => {
-    setItems( data.current )
-  },[data.current])
+    console.log(data)
+    if( data.current ) {
+      setItems( data.current )
+    }
+  },[data])
 
   
   return (

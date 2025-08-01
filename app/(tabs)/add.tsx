@@ -7,11 +7,13 @@ import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { DBContext } from '@/contexts/DBContext';
-import { AuthContext } from '@/contexts/AuthContext';
-import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
-import { ID, Permission, Role, Query } from "react-native-appwrite"
-
+//import { DBContext } from '@/contexts/DBContext';
+//import { AuthContext } from '@/contexts/AuthContext';
+//import { DATABASE_ID, COLLECTION_ID } from '@/config/Config';
+//import { ID, Permission, Role, Query } from "react-native-appwrite"
+import { useUser } from '@/hooks/userContext';
+import { useData } from '@/hooks/useData'
+import { Document } from '@/interfaces/Document';
 
 export default function AddScreen() {
   const [label,setLabel] = useState<string>('')
@@ -20,14 +22,12 @@ export default function AddScreen() {
   const [validDescription,setValidDescription] = useState<boolean>(false)
   const [uid,setUid] = useState<string>('')
   
-  const user = useContext(AuthContext)
-  const db = useContext(DBContext)
+  const user = useUser()
+  const data = useData()
 
   useEffect( () => {
-    if( user ) {  
-      user.get()
-      .then((res:any) => setUid(res.$id) ) 
-      .catch((error:string) => console.log(error))
+    if( user.current ) {  
+      setUid( user.current.$id )
     }
   },[user])
 
@@ -49,16 +49,6 @@ export default function AddScreen() {
     }
   },[description])
 
-  
-
-  interface Document {
-    label:string,
-    description: string,
-    status: boolean,
-    created: number,
-    userId: string
-  }
-
   const addDocument = async () => {
     const ts:number = new Date().getTime()
     const item:Document = {
@@ -69,19 +59,8 @@ export default function AddScreen() {
       userId: uid
     }
     console.log( item )
-    // write the document to the database
-    const result = await db.createDocument(
-      DATABASE_ID,
-      COLLECTION_ID,
-      ID.unique(),
-      item,
-      [ 
-        Permission.write( Role.user(item.userId) ),
-        Permission.read( Role.user(item.userId) ),
-        Permission.update( Role.user(item.userId) ),
-        Permission.delete( Role.user(item.userId) )
-      ]
-    )
+    data.add( item )
+    .then((res:any) => console.log(res))
   }
 
   return (
