@@ -3,10 +3,10 @@ import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
 import { useState, useEffect, useContext } from 'react'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
-//import { useUser } from '@/hooks/userContext'
+import { useUser } from '@/hooks/userContext'
 import { router, Link } from 'expo-router'
-import { AuthContext } from '@/contexts/AuthContext'
-import { ID } from 'react-native-appwrite'
+//import { AuthContext } from '@/contexts/AuthContext'
+//import { ID } from 'react-native-appwrite'
 
 export default function Login(props: any) {
     const [email, setEmail] = useState<string>('')
@@ -14,15 +14,18 @@ export default function Login(props: any) {
     // email and password validity
     const [validEmail, setValidEmail] = useState<boolean>(false)
     const [validPassword, setValidPassword] = useState<boolean>(false)
-    const [auth,setAuth] = useState<null|any>(null)
+    const [auth,setAuth] = useState<boolean>(false)
 
-    const user = useContext(AuthContext)
+    //const user = useContext(AuthContext)
+    const user = useUser()
 
     const login = async () => {
         try {
-            const session = await user.createEmailPasswordSession(email,password)
-            console.log(session)
-            setAuth(session)
+            // const session = await user.createEmailPasswordSession(email,password)
+            // console.log(session)
+            // setAuth(session)
+            await user.login( email, password )
+            setAuth( true )
         }
         catch( error:any ) {
             console.log( error )
@@ -35,8 +38,7 @@ export default function Login(props: any) {
         }
     }, [auth])
 
-    //const user = useUser()
-    //console.log(user)
+    
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             // console.log('valid email')
