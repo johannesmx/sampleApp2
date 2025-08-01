@@ -8,10 +8,13 @@ import { router } from 'expo-router'
 
 export default function ProfileScreen() {
     //const user = useContext(AuthContext)
+    const user = useUser()
 
     const signOut = async () => {
         //await user.deleteSession("current")
         //router.navigate("/login")
+        await user.logout()
+        router.navigate("/login")
     }
 
     return(

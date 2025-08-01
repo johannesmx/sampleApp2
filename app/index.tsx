@@ -15,7 +15,7 @@ export default function SignUp(props: any) {
     // email and password validity
     const [validEmail, setValidEmail] = useState<boolean>(false)
     const [validPassword, setValidPassword] = useState<boolean>(false)
-    const [auth,setAuth] = useState<null|any>(null)
+    const [auth,setAuth] = useState<boolean>(false)
 
     //const user = useContext(AuthContext)
     const user = useUser()
@@ -29,27 +29,21 @@ export default function SignUp(props: any) {
         user.register( email, password )
         .then((res:any) => {
             //navigate after response
-            console.log(res)
+            setAuth(true)
         })
         .catch((error:any) => console.log(error))
     }
 
     useEffect(() => {
         if( auth ) {
-            //console.log( auth )
             router.navigate("/(tabs)")
         }
     }, [auth])
 
     useEffect( () => {
         try {
-            if( user ) {
-                console.log( user )
-                user.get()
-                .then((res:any) => console.log(res))
-                .catch((error:any) => {
-                    console.log(error.AppwriteException )
-                })
+            if( user.current ) {
+               setAuth(true)
             }
         }
         catch( error:any ) {
