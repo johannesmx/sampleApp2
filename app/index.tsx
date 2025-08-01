@@ -5,8 +5,9 @@ import { useState, useEffect, useContext } from 'react'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
 import { useUser } from '@/hooks/userContext'
 import { router, Link } from 'expo-router'
-import { AuthContext } from '@/contexts/AuthContext'
-import { ID } from 'react-native-appwrite'
+//import { AuthContext } from '@/contexts/AuthContext'
+//import { ID } from 'react-native-appwrite'
+//import { useUser } from '@/hooks/userContext'
 
 export default function SignUp(props: any) {
     const [email, setEmail] = useState<string>('')
@@ -16,14 +17,21 @@ export default function SignUp(props: any) {
     const [validPassword, setValidPassword] = useState<boolean>(false)
     const [auth,setAuth] = useState<null|any>(null)
 
-    const user = useContext(AuthContext)
+    //const user = useContext(AuthContext)
+    const user = useUser()
 
     const register = async () => {
         // sign up with unique id, email and password
-        await user.create( ID.unique(), email, password )
-        // create a session
-        const session = await user.createEmailPasswordSession(email,password)
-        setAuth(session)
+        // await user.create( ID.unique(), email, password )
+        // // create a session
+        // const session = await user.createEmailPasswordSession(email,password)
+        // setAuth(session)
+        user.register( email, password )
+        .then((res:any) => {
+            //navigate after response
+            console.log(res)
+        })
+        .catch((error:any) => console.log(error))
     }
 
     useEffect(() => {

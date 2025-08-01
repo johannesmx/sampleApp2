@@ -8,7 +8,6 @@ export function useUser() {
   return useContext(UserContext);
 }
 
-
 export function UserProvider(props:any) {
   const [user, setUser] = useState< any>();
 

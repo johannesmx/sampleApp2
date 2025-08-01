@@ -8,9 +8,12 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 // authentication context
 import { AuthContext } from '@/contexts/AuthContext';
 import { account } from '@/lib/appwrite';
+import { useUser } from '@/hooks/userContext'
+import { UserProvider } from '@/hooks/userContext'
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const user = useUser()
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
@@ -22,16 +25,16 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthContext.Provider value={account}>
-        <Stack>
-          <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="home" options={{ headerShown: false }} />
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
-      </AuthContext.Provider>
+        <UserProvider value={user}>
+          <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="home" options={{ headerShown: false }} />
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </UserProvider>
     </ThemeProvider>
   );
 }
