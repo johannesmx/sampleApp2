@@ -6,8 +6,6 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 // authentication context
-import { AuthContext } from '@/contexts/AuthContext';
-import { account } from '@/lib/appwrite';
 import { useUser } from '@/hooks/userContext'
 import { UserProvider } from '@/hooks/userContext'
 

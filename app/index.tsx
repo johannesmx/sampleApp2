@@ -3,11 +3,8 @@ import { ThemedView } from '@/components/ThemedView'
 import { ThemedText } from '@/components/ThemedText'
 import { useState, useEffect, useContext } from 'react'
 import { ValidIndicator } from '@/components/ui/ValidIndicator'
-import { useUser } from '@/hooks/userContext'
 import { router, Link } from 'expo-router'
-//import { AuthContext } from '@/contexts/AuthContext'
-//import { ID } from 'react-native-appwrite'
-//import { useUser } from '@/hooks/userContext'
+import { useUser } from '@/hooks/userContext'
 
 export default function SignUp(props: any) {
     const [email, setEmail] = useState<string>('')
@@ -15,43 +12,34 @@ export default function SignUp(props: any) {
     // email and password validity
     const [validEmail, setValidEmail] = useState<boolean>(false)
     const [validPassword, setValidPassword] = useState<boolean>(false)
-    const [auth,setAuth] = useState<boolean>(false)
+    const [auth, setAuth] = useState<boolean>(false)
 
-    //const user = useContext(AuthContext)
     const user = useUser()
 
     const register = async () => {
-        // sign up with unique id, email and password
-        // await user.create( ID.unique(), email, password )
-        // // create a session
-        // const session = await user.createEmailPasswordSession(email,password)
-        // setAuth(session)
-        user.register( email, password )
-        .then((res:any) => {
-            //navigate after response
-            setAuth(true)
-        })
-        .catch((error:any) => console.log(error))
+        user.register(email, password)
+            .then((res: any) => {
+                //set auth to true to trigger navigation
+                setAuth(true)
+            })
+            .catch((error: any) => console.log(error))
     }
 
     useEffect(() => {
-        if( auth ) {
+        if (user.current) {
+            
+            setAuth(true)
+        }
+        console.log(user)
+    }, [user])
+
+    useEffect(() => {
+        if (auth) {
             router.navigate("/(tabs)")
         }
     }, [auth])
 
-    useEffect( () => {
-        try {
-            if( user.current ) {
-               setAuth(true)
-            }
-        }
-        catch( error:any ) {
-            console.log( error )
-        }
-    },[user])
 
-    
     useEffect(() => {
         if (email.indexOf('@') > 0) {
             // console.log('valid email')
@@ -74,17 +62,17 @@ export default function SignUp(props: any) {
         }
     }, [password])
 
-    
+
 
     return (
         <ThemedView style={styles.container}>
             <View style={styles.form}>
                 <ThemedText style={styles.title}>Sign up</ThemedText>
-                <View style={ styles.label }>
+                <View style={styles.label}>
                     <ThemedText>Email</ThemedText>
                     <ValidIndicator valid={validEmail} />
                 </View>
-                
+
                 <TextInput
                     style={styles.input}
                     placeholder='you@example.com'
@@ -92,7 +80,7 @@ export default function SignUp(props: any) {
                     value={email}
                 />
 
-                <View style={ styles.label }>
+                <View style={styles.label}>
                     <ThemedText>Password</ThemedText>
                     <ValidIndicator valid={validPassword} />
                 </View>
@@ -107,9 +95,9 @@ export default function SignUp(props: any) {
                 <Pressable
                     style={(validEmail && validPassword) ? styles.button : styles.buttondisabled}
                     disabled={(validEmail && validPassword) ? false : true}
-                    onPress={ () => { 
+                    onPress={() => {
                         register()
-                        }}
+                    }}
                 >
                     <ThemedText
                         style={(validEmail && validPassword) ? styles.buttonText : styles.buttonTextDisabled}
@@ -118,7 +106,7 @@ export default function SignUp(props: any) {
                     </ThemedText>
                 </Pressable>
                 <ThemedView>
-                    <ThemedText style={ styles.altscreen }>
+                    <ThemedText style={styles.altscreen}>
                         <Link href="/login">Already have an account? Go to Login</Link>
                     </ThemedText>
                 </ThemedView>

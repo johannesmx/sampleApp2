@@ -13,50 +13,56 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 // import { databases } from '@/lib/appwrite';
 import { useData } from '@/hooks/useData'
 import { DataProvider } from '@/hooks/useData'
+// user context
+import { useUser } from '@/hooks/userContext'
+import { UserProvider } from '@/hooks/userContext';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const data = useData()
+  const user = useUser()
   return (
     // <DBContext.Provider value={databases}>
-    <DataProvider value={data}>
-      <Tabs
-        screenOptions={{
-          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-          headerShown: true,
-          tabBarButton: HapticTab,
-          tabBarBackground: TabBarBackground,
-          tabBarStyle: Platform.select({
-            ios: {
-              // Use a transparent background on iOS to show the blur effect
-              position: 'absolute',
-            },
-            default: {},
-          }),
-        }}>
-        <Tabs.Screen
-          name="index"
-          options={{
-            title: 'Your Items',
-            tabBarIcon: ({ color }) => <Ionicons size={28} name="list-outline" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="add"
-          options={{
-            title: 'Add',
-            tabBarIcon: ({ color }) => <Ionicons size={28} name="add-circle-outline" color={color} />,
-          }}
-        />
-        <Tabs.Screen
-          name="profile"
-          options={{
-            title: "Profile",
-            tabBarIcon: ({ color }) => <Ionicons size={28} name="person-circle" color={color} />
-          }}
-        />
-      </Tabs>
-      </DataProvider>
+    <UserProvider value={user}>
+      <DataProvider value={data}>
+        <Tabs
+          screenOptions={{
+            tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+            headerShown: true,
+            tabBarButton: HapticTab,
+            tabBarBackground: TabBarBackground,
+            tabBarStyle: Platform.select({
+              ios: {
+                // Use a transparent background on iOS to show the blur effect
+                position: 'absolute',
+              },
+              default: {},
+            }),
+          }}>
+          <Tabs.Screen
+            name="index"
+            options={{
+              title: 'Your Items',
+              tabBarIcon: ({ color }) => <Ionicons size={28} name="list-outline" color={color} />,
+            }}
+          />
+          <Tabs.Screen
+            name="add"
+            options={{
+              title: 'Add',
+              tabBarIcon: ({ color }) => <Ionicons size={28} name="add-circle-outline" color={color} />,
+            }}
+          />
+          <Tabs.Screen
+            name="profile"
+            options={{
+              title: "Profile",
+              tabBarIcon: ({ color }) => <Ionicons size={28} name="person-circle" color={color} />
+            }}
+          />
+        </Tabs>
+        </DataProvider>
+    </UserProvider>
     // </DBContext.Provider>
   );
 }

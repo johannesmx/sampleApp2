@@ -18,6 +18,7 @@ export default function ListScreen() {
   useEffect( ()=>{
     if( user.current ) {
       setUid( user.current.$id )
+      console.log( user )
     }
   },[user])
 
